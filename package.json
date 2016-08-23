@@ -1,0 +1,36 @@
+{
+  "name": "smart-setter",
+  "version": "1.0.0",
+  "description": "create new object based on old object and set of modifications that can be applied at selective depths",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf lib && babel src -d lib",
+    "buildTest": "rm -rf test/lib && babel test/src -d test/lib",
+    "test": "npm run build && npm run buildTest && mocha 'test/lib/**/*.@(js|jsx)'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcellosachs/smart-setter.git"
+  },
+  "keywords": [
+    "set",
+    "setter",
+    "immutable",
+    "merge",
+    "extend",
+    "clone"
+  ],
+  "author": "Marcello Sachs <marcello.sachs@gmail.com> (https://github.com/marcellosachs)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcellosachs/smart-setter/issues"
+  },
+  "homepage": "https://github.com/marcellosachs/smart-setter#readme",
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-core": "^6.13.2",
+    "babel-preset-es2015": "^6.13.2",
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2"
+  }
+}
