@@ -56,4 +56,56 @@ describe('smartSetter', function () {
 
     (0, _chai.expect)(result).to.deep.equal(expected);
   });
+
+  it('can insert elements', function () {
+    var source = {
+      key1: {
+        _insert: 'val12'
+      }
+    };
+    var target = {
+      key1: ['val11']
+    };
+    var result = subject(source)(target);
+    var expected = {
+      key1: ['val11', 'val12']
+    };
+    (0, _chai.expect)(result).to.deep.equal(expected);
+  });
+
+  it('can remove elements', function () {
+    var source = {
+      key1: {
+        _remove: { id: 1 }
+      }
+    };
+    var target = {
+      key1: [{ id: 1, name: 'great' }, { id: 2, name: 'nice' }]
+    };
+    var result = subject(source)(target);
+    var expected = {
+      key1: [{ id: 2, name: 'nice' }]
+    };
+    (0, _chai.expect)(result).to.deep.equal(expected);
+  });
+
+  it('cuts through arrays', function () {
+    var source = {
+      key1: {
+        "id=1": {
+          name: 'name1Updated'
+        }
+      }
+    };
+
+    var target = {
+      key1: [{ id: 1, name: 'name1' }, { id: 2, name: 'name2' }]
+    };
+
+    var result = subject(source)(target);
+    var expected = {
+      key1: [{ id: 1, name: 'name1Updated' }, { id: 2, name: 'name2' }]
+    };
+    (0, _chai.expect)(result).to.deep.equal(expected);
+  });
 });

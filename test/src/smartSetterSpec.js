@@ -51,4 +51,63 @@ describe('smartSetter', () => {
     expect(result).to.deep.equal(expected)
 
   })
+
+  it('can insert elements', () => {
+    const source = {
+      key1: {
+        _insert: 'val12'
+      }
+    }
+    const target = {
+      key1: ['val11']
+    }
+    const result = subject(source)(target)
+    const expected = {
+      key1: ['val11', 'val12']
+    }
+    expect(result).to.deep.equal(expected)
+  })
+
+  it('can remove elements', () => {
+    const source = {
+      key1: {
+        _remove: {id: 1}
+      }
+    }
+    const target = {
+      key1: [{id: 1, name: 'great'}, {id: 2, name: 'nice'}]
+    }
+    const result = subject(source)(target)
+    const expected = {
+      key1: [{id: 2, name: 'nice'}]
+    }
+    expect(result).to.deep.equal(expected)
+  })
+
+  it('cuts through arrays', () => {
+    const source = {
+      key1: {
+        "id=1": {
+          name: 'name1Updated',
+        },
+      },
+    }
+
+    const target = {
+      key1: [
+        {id: 1, name: 'name1'},
+        {id: 2, name: 'name2'},
+      ]
+    }
+
+    const result = subject(source)(target)
+    const expected = {
+      key1: [
+        {id: 1, name: 'name1Updated'},
+        {id: 2, name: 'name2'},
+      ],
+    }
+    expect(result).to.deep.equal(expected)
+  })
+
 })

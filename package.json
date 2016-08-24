@@ -18,7 +18,11 @@
     "immutable",
     "merge",
     "extend",
-    "clone"
+    "clone",
+    "react",
+    "state",
+    "hash",
+    "object"
   ],
   "author": "Marcello Sachs <marcello.sachs@gmail.com> (https://github.com/marcellosachs)",
   "license": "ISC",
