@@ -1,5 +1,5 @@
 # Install
-`npm install smart-setter`
+`npm install --save smart-setter`
 
 # Usage
 ```
@@ -29,14 +29,14 @@ const setterSpecification = {
   },
   key2: {
     _replace: {
-      key22: 'val22'
-    }
+      key22: 'val22',
+    },
   },
   key3: {
-    _insert: 'val32'
+    _insert: 'val32',
   },
   key4: {
-    _remove: {id: 1}
+    _remove: {id: 1},
   },
   key5: {
     "id=3": {
@@ -64,7 +64,8 @@ This results in the following new object (`obj1` remains unchanged) :
     {id: 2, name: 'name2'},
   ],
   key5: [
-    {id: 3, name: 'name3Updated', foo: 'bar'}
+    {id: 3, name: 'name3Updated', foo: 'bar'},
+    {id: 4, name: 'name4'},
   ],
 }
 ```
