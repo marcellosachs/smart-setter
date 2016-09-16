@@ -1,45 +1,46 @@
-const smartSetter = source => target => {
-  if (typeof source !== 'object') return source
-  return Object.keys(source).reduce((acc, key) => {
+const smartSetter =  config => source => target => {
+  if (!config.isObject(source)) return source
+  return config.getKeys(source).reduce((acc, key) => {
     switch(key) {
       case '_replace':
-        return source[key]
+        return config.get(source, key)
         break;
 
       case '_insert':
-        const newEle = source[key]
+        const newEle = config.get(source, key)
         const oldArr = target
-        return oldArr.concat([newEle])
+        return config.push(oldArr, newEle)
         break;
 
       case '_remove':
-        const properties = source[key]
+        const properties = config.get(source, key)
         const newArray = target.filter(ele => (
-          !Object.keys(properties).reduce((acc, key2) => acc && properties[key2] === ele[key2], true)
+          !config.getKeys(properties).reduce(
+            (acc, key2) => acc && config.get(properties, key2) === config.get(ele,key2), true)
         ))
         return newArray;
         break;
 
       default:
-        if (Array.isArray(target)) {
+        if (config.isArrayOrList(target)) {
           const [propKey, propValue] = key.split("=")
-          return target.map(function (ele) {
-            if (ele[propKey] == propValue) {
-              return smartSetter(source[key])(ele)
+          return target.map(ele => {
+            if (config.get(ele,propKey) == propValue) {
+              return smartSetter(config)(config.get(source,key))(ele)
             } else {
               return ele
             }
           })
 
         } else {
-          const nextSource = source[key]
-          const nextTarget = target[key]
-          acc[key] = smartSetter(nextSource)(nextTarget)
-          return acc;
+          const nextSource = config.get(source,key)
+          const nextTarget = config.get(target,key)
+          const acc2 = config.set(acc, key, smartSetter(config)(nextSource)(nextTarget))
+          return acc2;
         }
         break;
     }
-  }, Object.assign({}, target))
+  }, config.clone(target))
 }
 
 export default smartSetter

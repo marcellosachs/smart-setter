@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 var _chai = require('chai');
 
 var _index = require('../../index');
@@ -8,9 +10,35 @@ var _index2 = _interopRequireDefault(_index);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var plainObjConfig = {
+  get: function get(obj, propKey) {
+    return obj[propKey];
+  },
+  set: function set(obj, propKey, value) {
+    var newObj = Object.assign({}, obj);
+    newObj[propKey] = value;
+    return newObj;
+  },
+  getKeys: function getKeys(obj) {
+    return Object.keys(obj);
+  },
+  isObject: function isObject(item) {
+    return (typeof item === 'undefined' ? 'undefined' : _typeof(item)) === 'object';
+  },
+  isArrayOrList: function isArrayOrList(item) {
+    return Array.isArray(item);
+  },
+  push: function push(arr, item) {
+    return arr.concat([item]);
+  },
+  clone: function clone(obj) {
+    return Object.assign({}, obj);
+  }
+};
+
 describe('smartSetter', function () {
 
-  var subject = _index2.default;
+  var subject = (0, _index2.default)(plainObjConfig);
 
   it('works in trivial case', function () {
     var source = {};
