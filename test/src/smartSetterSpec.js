@@ -1,139 +1,159 @@
 import { expect } from 'chai';
 import smartSetter from '../../index'
+import objectConfigForSmartSetter from 'object-config-for-smart-setter';
+import immutableConfigForSmartSetter from 'immutable-config-for-smart-setter';
+import Immutable from 'immutable'
 
-const plainObjConfig = {
-  get: (obj, propKey) => {
-    return obj[propKey]
-  },
-  set: (obj, propKey, value) => {
-    var newObj = Object.assign({}, obj)
-    newObj[propKey] = value
-    return newObj;
-  },
-  getKeys: obj => {
-    return Object.keys(obj)
-  },
-  isObject: item => {
-    return typeof item === 'object'
-  },
-  isArrayOrList: item => {
-    return Array.isArray(item)
-  },
-  push: (arr, item) => {
-    return arr.concat([item])
-  },
-  clone: obj => {
-    return Object.assign({}, obj)
-  },
-}
+// var _immutable2 = Immutable
+// const immutableConfigForSmartSetter = {
+//   get: function get($$obj, propKey) {
+//     return $$obj.get(propKey);
+//   },
+//   set: function set($$obj, propKey, value) {
+//     return $$obj.set(propKey, value);
+//   },
+//   getKeys: function getKeys($$obj) {
+//     return $$obj.keySeq().toArray();
+//   },
+//   isObjectOrMap: function isObjectOrMap($$item) {
+//     return _immutable2.Map.isMap($$item);
+//   },
+//   isArrayOrList: function isArrayOrList($$item) {
+//     return _immutable2.List.isList($$item);
+//   },
+//   push: function push($$arr, $$item) {
+//     return $$arr.push($$item);
+//   },
+//   clone: function clone($$obj) {
+//     return $$obj; // no need to clone since object is immutable
+//   }
+// };
+
+
+const I = item => Immutable.fromJS({key: item}).get('key')
 
 describe('smartSetter', () => {
 
-  const subject = smartSetter(plainObjConfig)
+  const helper = subject => {
 
-  it('works in trivial case', () => {
-    const source = {}
-    const target = {}
-    const result = subject(source)(target)
-    expect(result).to.deep.equal({})
-  })
+    it('works in trivial case', () => {
+      const source = {}
+      const target = {}
+      const result = subject(source)(target)
+      expect(result).to.deep.equal({})
+    })
 
-  it('merges by default, but can selectively replace', () => {
-    const source = {
-      key1: {
-        key1key2: 'val12',
-      },
-      key2: {
-        _replace: {
+    it('merges by default, but can selectively replace', () => {
+      const source = {
+        key1: {
+          key1key2: 'val12',
+        },
+        key2: {
+          _replace: {
+            key2key2: 'val22',
+          },
+        },
+      }
+
+      const target = {
+        key1: {
+          key1key1: 'val11',
+        },
+        key2: {
+          key2key1: 'val21',
+        },
+        key3: 'val3'
+      }
+
+
+      const result = subject(source)(target)
+
+      const expected = {
+        key1: {
+          key1key1: 'val11',
+          key1key2: 'val12',
+        },
+        key2: {
           key2key2: 'val22',
         },
-      },
-    }
-
-    const target = {
-      key1: {
-        key1key1: 'val11',
-      },
-      key2: {
-        key2key1: 'val21',
-      },
-      key3: 'val3'
-    }
-
-
-    const result = subject(source)(target)
-
-    const expected = {
-      key1: {
-        key1key1: 'val11',
-        key1key2: 'val12',
-      },
-      key2: {
-        key2key2: 'val22',
-      },
-      key3: 'val3',
-    }
-
-    expect(result).to.deep.equal(expected)
-
-  })
-
-  it('can insert elements', () => {
-    const source = {
-      key1: {
-        _insert: 'val12'
+        key3: 'val3',
       }
-    }
-    const target = {
-      key1: ['val11']
-    }
-    const result = subject(source)(target)
-    const expected = {
-      key1: ['val11', 'val12']
-    }
-    expect(result).to.deep.equal(expected)
-  })
 
-  it('can remove elements', () => {
-    const source = {
-      key1: {
-        _remove: {id: 1}
+      expect(result).to.deep.equal(expected)
+
+    })
+
+    it('can insert elements', () => {
+      const source = {
+        key1: {
+          _insert: 'val12'
+        }
       }
-    }
-    const target = {
-      key1: [{id: 1, name: 'great'}, {id: 2, name: 'nice'}]
-    }
-    const result = subject(source)(target)
-    const expected = {
-      key1: [{id: 2, name: 'nice'}]
-    }
-    expect(result).to.deep.equal(expected)
-  })
+      const target = {
+        key1: ['val11']
+      }
+      const result = subject(source)(target)
+      const expected = {
+        key1: ['val11', 'val12']
+      }
+      expect(result).to.deep.equal(expected)
+    })
 
-  it('cuts through arrays', () => {
-    const source = {
-      key1: {
-        "id=1": {
-          name: 'name1Updated',
+    it('can remove elements', () => {
+      const source = {
+        key1: {
+          _remove: {id: 1}
+        }
+      }
+      const target = {
+        key1: [{id: 1, name: 'great'}, {id: 2, name: 'nice'}]
+      }
+      const result = subject(source)(target)
+      const expected = {
+        key1: [{id: 2, name: 'nice'}]
+      }
+      expect(result).to.deep.equal(expected)
+    })
+
+    it('cuts through arrays', () => {
+      const source = {
+        key1: {
+          "id=1": {
+            name: 'name1Updated',
+          },
         },
-      },
-    }
+      }
 
-    const target = {
-      key1: [
-        {id: 1, name: 'name1'},
-        {id: 2, name: 'name2'},
-      ]
-    }
+      const target = {
+        key1: [
+          {id: 1, name: 'name1'},
+          {id: 2, name: 'name2'},
+        ]
+      }
 
-    const result = subject(source)(target)
-    const expected = {
-      key1: [
-        {id: 1, name: 'name1Updated'},
-        {id: 2, name: 'name2'},
-      ],
+      const result = subject(source)(target)
+      const expected = {
+        key1: [
+          {id: 1, name: 'name1Updated'},
+          {id: 2, name: 'name2'},
+        ],
+      }
+      expect(result).to.deep.equal(expected)
+    })
+  }
+
+  describe('it works with object config', () => {
+    helper(smartSetter(objectConfigForSmartSetter))
+  })
+
+  describe('it works with immutable config', () => {
+    const helper2 = source => target => {
+      const source2 = I(source)
+      const target2 = I(target)
+      const result = smartSetter(immutableConfigForSmartSetter)(source2)(target2)
+      return result.toJS()
     }
-    expect(result).to.deep.equal(expected)
+    helper(helper2)
   })
 
 })

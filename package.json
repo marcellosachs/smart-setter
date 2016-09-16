@@ -6,7 +6,8 @@
   "scripts": {
     "build": "rm -rf lib && babel src -d lib",
     "buildTest": "rm -rf test/lib && babel test/src -d test/lib",
-    "test": "npm run build && npm run buildTest && mocha 'test/lib/**/*.@(js|jsx)'"
+    "test": "npm run build && npm run buildTest && mocha 'test/lib/**/*.@(js|jsx)'",
+    "deploy": "npm run build && git add --all && git commit -m 'automatic commit' && git push origin && npm version patch && npm publish"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,9 @@
     "babel-core": "^6.13.2",
     "babel-preset-es2015": "^6.13.2",
     "chai": "^3.5.0",
-    "mocha": "^3.0.2"
+    "immutable": "^3.8.1",
+    "immutable-config-for-smart-setter": "^1.0.1",
+    "mocha": "^3.0.2",
+    "object-config-for-smart-setter": ""
   }
 }

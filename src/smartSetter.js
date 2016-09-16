@@ -1,5 +1,5 @@
 const smartSetter =  config => source => target => {
-  if (!config.isObject(source)) return source
+  if (!config.isObjectOrMap(source)) return source
   return config.getKeys(source).reduce((acc, key) => {
     switch(key) {
       case '_replace':
