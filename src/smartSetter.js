@@ -1,4 +1,35 @@
+const _whiteList = (config, target, list) => {
+  if (config.isArrayOrList(target)) {
+   return target.filter(ele => {
+     return list.includes(config.get(ele, 'name'))
+   })
+  } else if (config.isObjectOrMap(target)) {
+    return list.reduce((acc, ele) => {
+      const value = config.get(target, ele)
+      return config.set(acc, ele, value)
+    }, config.emptyObjectOrMap())
+  } else {
+    return target;
+  }
+}
+
+const _blackList = (config, target, list) => {
+  let totalList;
+  if (config.isArrayOrList(target)) {
+    totalList = target.map(ele => config.get(ele, ('name')))
+  } else if (config.isObjectOrMap(target)) {
+    totalList = config.getKeys(target)
+  } else {
+    return target;
+  }
+  const whiteList = totalList.filter(ele => !list.includes(ele))
+  return _whiteList(config, target, whiteList)
+}
+
 const smartSetter =  config => source => target => {
+
+  let list;
+
   if (!config.isObjectOrMap(source)) return source
   return config.getKeys(source).reduce((acc, key) => {
     switch(key) {
@@ -20,6 +51,14 @@ const smartSetter =  config => source => target => {
         ))
         return newArray;
         break;
+
+      case '_whiteList':
+        list = config.get(source, key)
+        return _whiteList(config, target, list)
+
+      case '_blackList':
+        list = config.get(source, key)
+        return _blackList(config, target, list)
 
       default:
         if (config.isArrayOrList(target)) {
