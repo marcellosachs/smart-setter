@@ -65,7 +65,7 @@ const smartSetter =  config => source => target => {
           const [propKey, propValue] = key.split("=")
           return target.map(ele => {
             if (config.get(ele,propKey) == propValue) {
-              return smartSetter(config)(config.get(source,key))(ele)
+              return smartSetter(config)(config.get(source, key))(ele)
             } else {
               return ele
             }
