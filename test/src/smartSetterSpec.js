@@ -118,7 +118,9 @@ describe('smartSetter', () => {
     it('whitelisting works', () => {
       const source = {
         key1: {
-          _whiteList: ['key11', 'key12'],
+          key2: {
+            _whiteList: ['key11', 'key12'],
+          }
         },
         key2: {
           _whiteList: ['key21', 'key22'],
@@ -127,9 +129,11 @@ describe('smartSetter', () => {
 
       const target = {
         key1: {
-          key11: 'val11',
-          key12: 'val12',
-          key13: 'val13',
+          key2: {
+            key11: 'val11',
+            key12: 'val12',
+            key13: 'val13',
+          },
         },
         key2: [
           {name: 'key21', value: 'val21'},
@@ -140,8 +144,10 @@ describe('smartSetter', () => {
 
       const expected = {
         key1: {
-          key11: 'val11',
-          key12: 'val12',
+          key2: {
+            key11: 'val11',
+            key12: 'val12',
+          },
         },
         key2: [
           {name: 'key21', value: 'val21'},
@@ -189,6 +195,32 @@ describe('smartSetter', () => {
       const result = subject(source)(target)
 
       expect(result).to.deep.equal(expected)
+    })
+
+    it('creates paths when they dont exist', () => {
+      const source = {
+        general: {
+          modalMessage: {
+            text: 'saved!', type: 'info'
+          }
+        }
+      }
+      const target = {
+        general: {
+          formFields: [],
+        },
+        componentEnumeration: []
+      }
+
+      const x = subject(source)(target)
+      const expected = {
+        general: {
+          formFields: [],
+          modalMessage: {text: 'saved!', type: 'info'}
+        },
+        componentEnumeration: [],
+      }
+      expect(x).to.deep.equal(expected)
     })
   }
 

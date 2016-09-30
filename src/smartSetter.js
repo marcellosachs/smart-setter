@@ -31,6 +31,7 @@ const smartSetter =  config => source => target => {
   let list;
 
   if (!config.isObjectOrMap(source)) return source
+  if (target === null || target === undefined) return source
   return config.getKeys(source).reduce((acc, key) => {
     switch(key) {
       case '_replace':
@@ -72,8 +73,8 @@ const smartSetter =  config => source => target => {
           })
 
         } else {
-          const nextSource = config.get(source,key)
-          const nextTarget = config.get(target,key)
+          const nextSource = config.get(source, key)
+          const nextTarget = config.get(target, key)
           const acc2 = config.set(acc, key, smartSetter(config)(nextSource)(nextTarget))
           return acc2;
         }

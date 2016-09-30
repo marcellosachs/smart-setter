@@ -128,7 +128,9 @@ describe('smartSetter', function () {
     it('whitelisting works', function () {
       var source = {
         key1: {
-          _whiteList: ['key11', 'key12']
+          key2: {
+            _whiteList: ['key11', 'key12']
+          }
         },
         key2: {
           _whiteList: ['key21', 'key22']
@@ -137,17 +139,21 @@ describe('smartSetter', function () {
 
       var target = {
         key1: {
-          key11: 'val11',
-          key12: 'val12',
-          key13: 'val13'
+          key2: {
+            key11: 'val11',
+            key12: 'val12',
+            key13: 'val13'
+          }
         },
         key2: [{ name: 'key21', value: 'val21' }, { name: 'key22', value: 'val22' }, { name: 'key23', value: 'val23' }]
       };
 
       var expected = {
         key1: {
-          key11: 'val11',
-          key12: 'val12'
+          key2: {
+            key11: 'val11',
+            key12: 'val12'
+          }
         },
         key2: [{ name: 'key21', value: 'val21' }, { name: 'key22', value: 'val22' }]
       };
@@ -186,6 +192,32 @@ describe('smartSetter', function () {
       var result = subject(source)(target);
 
       (0, _chai.expect)(result).to.deep.equal(expected);
+    });
+
+    it('creates paths when they dont exist', function () {
+      var source = {
+        general: {
+          modalMessage: {
+            text: 'saved!', type: 'info'
+          }
+        }
+      };
+      var target = {
+        general: {
+          formFields: []
+        },
+        componentEnumeration: []
+      };
+
+      var x = subject(source)(target);
+      var expected = {
+        general: {
+          formFields: [],
+          modalMessage: { text: 'saved!', type: 'info' }
+        },
+        componentEnumeration: []
+      };
+      (0, _chai.expect)(x).to.deep.equal(expected);
     });
   };
 
