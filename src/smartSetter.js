@@ -26,7 +26,7 @@ const _blackList = (config, target, list) => {
   return _whiteList(config, target, whiteList)
 }
 
-const smartSetter =  config => source => target => {
+const helper =  config => source => target => {
 
   let list;
 
@@ -66,7 +66,7 @@ const smartSetter =  config => source => target => {
           const [propKey, propValue] = key.split("=")
           return target.map(ele => {
             if (config.get(ele,propKey) == propValue) {
-              return smartSetter(config)(config.get(source, key))(ele)
+              return helper(config)(config.get(source, key))(ele)
             } else {
               return ele
             }
@@ -75,12 +75,17 @@ const smartSetter =  config => source => target => {
         } else {
           const nextSource = config.get(source, key)
           const nextTarget = config.get(target, key)
-          const acc2 = config.set(acc, key, smartSetter(config)(nextSource)(nextTarget))
+          const acc2 = config.set(acc, key, helper(config)(nextSource)(nextTarget))
           return acc2;
         }
         break;
     }
   }, config.clone(target))
+}
+
+const smartSetter = config => source => target => {
+  const source2 = config.toThisConfigsType(source)
+  return helper(config)(source2)(target)
 }
 
 export default smartSetter

@@ -228,12 +228,39 @@ describe('smartSetter', function () {
   describe('it works with immutable config', function () {
     var helper2 = function helper2(source) {
       return function (target) {
-        var source2 = I(source);
         var target2 = I(target);
-        var result = (0, _index2.default)(_immutableConfigForSmartSetter2.default)(source2)(target2);
+        var result = (0, _index2.default)(_immutableConfigForSmartSetter2.default)(source)(target2);
         return result.toJS();
       };
     };
     helper(helper2);
+  });
+
+  describe('', function () {
+    it('creates paths when they dont exist', function () {
+      var source = {
+        general: {
+          modalMessage: {
+            text: 'saved!', type: 'info'
+          }
+        }
+      };
+      var $$target = I({
+        general: {
+          formFields: []
+        },
+        componentEnumeration: []
+      });
+
+      var $$result = (0, _index2.default)(_immutableConfigForSmartSetter2.default)(source)($$target);
+      var expected = {
+        general: {
+          formFields: [],
+          modalMessage: { text: 'saved!', type: 'info' }
+        },
+        componentEnumeration: []
+      };
+      (0, _chai.expect)($$result.toJS()).to.deep.equal(expected);
+    });
   });
 });

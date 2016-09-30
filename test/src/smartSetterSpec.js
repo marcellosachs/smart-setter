@@ -230,12 +230,10 @@ describe('smartSetter', () => {
 
   describe('it works with immutable config', () => {
     const helper2 = source => target => {
-      const source2 = I(source)
       const target2 = I(target)
-      const result = smartSetter(immutableConfigForSmartSetter)(source2)(target2)
+      const result = smartSetter(immutableConfigForSmartSetter)(source)(target2)
       return result.toJS()
     }
     helper(helper2)
   })
-
 })
