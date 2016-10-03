@@ -37,6 +37,7 @@ const setterSpecification = {
   },
   key4: {
     _remove: {id: 1},
+    _insert: {id: 5, name: 'name5'},
   },
   key5: {
     "id=3": {
@@ -62,6 +63,7 @@ This results in the following new object (`obj1` remains unchanged) :
   key3: ['val31', 'val32',],
   key4: [
     {id: 2, name: 'name2'},
+    {id: 5, name: 'name5'}
   ],
   key5: [
     {id: 3, name: 'name3Updated', foo: 'bar'},
