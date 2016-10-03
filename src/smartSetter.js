@@ -33,6 +33,7 @@ const helper =  config => source => target => {
   if (!config.isObjectOrMap(source)) return source
   if (target === null || target === undefined) return source
   return config.getKeys(source).reduce((acc, key) => {
+
     switch(key) {
       case '_replace':
         return config.get(source, key)
@@ -40,13 +41,13 @@ const helper =  config => source => target => {
 
       case '_insert':
         const newEle = config.get(source, key)
-        const oldArr = target
+        const oldArr = acc
         return config.push(oldArr, newEle)
         break;
 
       case '_remove':
         const properties = config.get(source, key)
-        const newArray = target.filter(ele => (
+        const newArray = acc.filter(ele => (
           !config.getKeys(properties).reduce(
             (acc, key2) => acc && config.get(properties, key2) === config.get(ele,key2), true)
         ))
@@ -55,16 +56,16 @@ const helper =  config => source => target => {
 
       case '_whiteList':
         list = config.get(source, key)
-        return _whiteList(config, target, list)
+        return _whiteList(config, acc, list)
 
       case '_blackList':
         list = config.get(source, key)
-        return _blackList(config, target, list)
+        return _blackList(config, acc, list)
 
       default:
-        if (config.isArrayOrList(target)) {
+        if (config.isArrayOrList(acc)) {
           const [propKey, propValue] = key.split("=")
-          return target.map(ele => {
+          return acc.map(ele => {
             if (config.get(ele,propKey) == propValue) {
               return helper(config)(config.get(source, key))(ele)
             } else {
@@ -74,7 +75,7 @@ const helper =  config => source => target => {
 
         } else {
           const nextSource = config.get(source, key)
-          const nextTarget = config.get(target, key)
+          const nextTarget = config.get(acc, key)
           const acc2 = config.set(acc, key, helper(config)(nextSource)(nextTarget))
           return acc2;
         }

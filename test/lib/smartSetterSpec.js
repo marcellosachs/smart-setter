@@ -194,6 +194,27 @@ describe('smartSetter', function () {
       (0, _chai.expect)(result).to.deep.equal(expected);
     });
 
+    it('handles multiple array operations in a row', function () {
+      var source = {
+        key1: {
+          _whiteList: ['name1', 'name2'],
+          "id=1": {
+            name: 'name1Updated'
+          }
+        }
+      };
+
+      var target = {
+        key1: [{ id: 1, name: 'name1' }, { id: 2, name: 'name2' }, { id: 3, name: 'name3' }]
+      };
+
+      var result = subject(source)(target);
+      var expected = {
+        key1: [{ id: 1, name: 'name1Updated' }, { id: 2, name: 'name2' }]
+      };
+      (0, _chai.expect)(result).to.deep.equal(expected);
+    });
+
     it('creates paths when they dont exist', function () {
       var source = {
         general: {
@@ -234,33 +255,5 @@ describe('smartSetter', function () {
       };
     };
     helper(helper2);
-  });
-
-  describe('', function () {
-    it('creates paths when they dont exist', function () {
-      var source = {
-        general: {
-          modalMessage: {
-            text: 'saved!', type: 'info'
-          }
-        }
-      };
-      var $$target = I({
-        general: {
-          formFields: []
-        },
-        componentEnumeration: []
-      });
-
-      var $$result = (0, _index2.default)(_immutableConfigForSmartSetter2.default)(source)($$target);
-      var expected = {
-        general: {
-          formFields: [],
-          modalMessage: { text: 'saved!', type: 'info' }
-        },
-        componentEnumeration: []
-      };
-      (0, _chai.expect)($$result.toJS()).to.deep.equal(expected);
-    });
   });
 });

@@ -197,6 +197,34 @@ describe('smartSetter', () => {
       expect(result).to.deep.equal(expected)
     })
 
+    it('handles multiple array operations in a row', () => {
+      const source = {
+        key1: {
+          _whiteList: ['name1', 'name2'],
+          "id=1": {
+            name: 'name1Updated',
+          },
+        },
+      }
+
+      const target = {
+        key1: [
+          {id: 1, name: 'name1'},
+          {id: 2, name: 'name2'},
+          {id: 3, name: 'name3'},
+        ]
+      }
+
+      const result = subject(source)(target)
+      const expected = {
+        key1: [
+          {id: 1, name: 'name1Updated'},
+          {id: 2, name: 'name2'},
+        ],
+      }
+      expect(result).to.deep.equal(expected)
+    })
+  
     it('creates paths when they dont exist', () => {
       const source = {
         general: {
