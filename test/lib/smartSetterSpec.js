@@ -240,6 +240,30 @@ describe('smartSetter', function () {
       };
       (0, _chai.expect)(x).to.deep.equal(expected);
     });
+
+    it('applies a function', function () {
+      var source = {
+        key1: {
+          key2: {
+            _apply: function _apply(str) {
+              return str + 'NewTail';
+            }
+          }
+        }
+      };
+      var target = {
+        key1: {
+          key2: 'val'
+        }
+      };
+      var x = subject(source)(target);
+      var expected = {
+        key1: {
+          key2: 'valNewTail'
+        }
+      };
+      (0, _chai.expect)(x).to.deep.equal(expected);
+    });
   };
 
   describe('it works with object config', function () {

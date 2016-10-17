@@ -224,7 +224,7 @@ describe('smartSetter', () => {
       }
       expect(result).to.deep.equal(expected)
     })
-  
+
     it('creates paths when they dont exist', () => {
       const source = {
         general: {
@@ -247,6 +247,28 @@ describe('smartSetter', () => {
           modalMessage: {text: 'saved!', type: 'info'}
         },
         componentEnumeration: [],
+      }
+      expect(x).to.deep.equal(expected)
+    })
+
+    it('applies a function', () => {
+      const source = {
+        key1: {
+          key2: {
+            _apply: str => str + 'NewTail'
+          },
+        },
+      }
+      const target = {
+        key1: {
+          key2: 'val',
+        },
+      }
+      const x = subject(source)(target)
+      const expected = {
+        key1: {
+          key2: 'valNewTail',
+        },
       }
       expect(x).to.deep.equal(expected)
     })

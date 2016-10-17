@@ -39,6 +39,12 @@ const helper =  config => source => target => {
         return config.get(source, key)
         break;
 
+      case '_apply':
+        const fn = config.get(source, key)
+        const y1 =  fn(acc)
+        return y1
+        break;
+
       case '_insert':
         const newEle = config.get(source, key)
         const oldArr = acc
