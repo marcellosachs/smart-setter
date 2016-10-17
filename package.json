@@ -1,6 +1,6 @@
 {
   "name": "smart-setter",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "create new object based on old object and set of modifications that can be applied at selective depths",
   "main": "index.js",
   "scripts": {
