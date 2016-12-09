@@ -39,6 +39,7 @@
     "immutable": "^3.8.1",
     "immutable-config-for-smart-setter": "^1.0.1",
     "mocha": "^3.0.2",
-    "object-config-for-smart-setter": ""
-  }
+    "object-config-for-smart-setter": "^1.0.11"
+  },
+  "dependencies": {}
 }

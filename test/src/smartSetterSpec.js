@@ -69,6 +69,31 @@ describe('smartSetter', () => {
 
     })
 
+    it('replace works when keyPath doesnt exist on target', () => {
+      const source = {
+        key2: {
+          _replace: {
+            key2key2: 'val21'
+          }
+        }
+      }
+
+      const target = {
+        key1: 'val1',
+      }
+
+      const result = subject(source)(target)
+
+      const expected = {
+        key1: 'val1',
+        key2: {
+          key2key2: 'val21',
+        },
+      }
+
+      expect(result).to.deep.equal(expected)
+    })
+
     it('can insert elements', () => {
       const source = {
         key1: {
@@ -262,6 +287,7 @@ describe('smartSetter', () => {
       }
       expect(x).to.deep.equal(expected)
     })
+
 
     it('applies a function', () => {
       const source = {

@@ -26,12 +26,34 @@ const _blackList = (config, target, list) => {
   return _whiteList(config, target, whiteList)
 }
 
+const fillWhereTargetNotPresent = config => source => {
+  if (config.isArrayOrList(source)) {
+    return source.map(fillWhereTargetNotPresent(config))
+  } else if (!config.isObjectOrMap(source)) {
+    return source
+  } else {
+    const keys = config.getKeys(source)
+    if (keys) {
+      return keys.reduce((acc, key) => {
+        const value = config.get(source, key)
+        if (key === '_replace') {
+          return config.merge(acc, fillWhereTargetNotPresent(config)(value))
+        } else {
+          return config.set(acc, key, fillWhereTargetNotPresent(config)(value))
+        }
+      }, config.emptyObjectOrMap())
+    } else {
+      return source
+    }
+  }
+}
+
 const helper =  config => source => target => {
 
   let list;
 
   if (!config.isObjectOrMap(source)) return source
-  if (target === null || target === undefined) return source
+  if (target === null || target === undefined) return fillWhereTargetNotPresent(config)(source)
   return config.getKeys(source).reduce((acc, key) => {
 
     switch(key) {

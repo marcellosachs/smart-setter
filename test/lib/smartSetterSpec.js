@@ -85,6 +85,31 @@ describe('smartSetter', function () {
       (0, _chai.expect)(result).to.deep.equal(expected);
     });
 
+    it('replace works when keyPath doesnt exist on target', function () {
+      var source = {
+        key2: {
+          _replace: {
+            key2key2: 'val21'
+          }
+        }
+      };
+
+      var target = {
+        key1: 'val1'
+      };
+
+      var result = subject(source)(target);
+
+      var expected = {
+        key1: 'val1',
+        key2: {
+          key2key2: 'val21'
+        }
+      };
+
+      (0, _chai.expect)(result).to.deep.equal(expected);
+    });
+
     it('can insert elements', function () {
       var source = {
         key1: {
