@@ -24,8 +24,10 @@ describe('smartSetter', () => {
         },
         key2: {
           key2key1: {
-            _replace: {
-              key2key1key2: 'val22',
+            key2key1key1: {
+              _replace: {
+                key2key1key1key2: 'val22',
+              },
             },
           },
         },
@@ -37,7 +39,9 @@ describe('smartSetter', () => {
         },
         key2: {
           key2key1: {
-            key2key1key1: 'val21',
+            key2key1key1: {
+              key2key1key1key1: 'val21',
+            },
           },
         },
         key3: 'val3'
@@ -53,7 +57,9 @@ describe('smartSetter', () => {
         },
         key2: {
           key2key1: {
-            key2key1key2: 'val22',
+            key2key1key1: {
+              key2key1key1key2: 'val22',
+            },
           },
         },
         key3: 'val3',
